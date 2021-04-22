@@ -1,9 +1,8 @@
 import tkinter as tk
 import requests
 root= tk.Tk()
-
-canvas1 = tk.Canvas(root, width = 400, height = 60,  relief = 'raised')
-canvas1.place(relheight=.5)
+root.resizable(False,False)
+canvas1 = tk.Canvas(root, width = 400, height = 20,  relief = 'raised')
 canvas1.pack()
 
 label1 = tk.Label(root, text='Send discord Webhooks')
@@ -43,23 +42,38 @@ label5.config(font=('helvetica', 10))
 canvas1.create_window(200, 100, window=label5)
 
 
+def errormsgtext(text):
+    errormsg=tk.Label(root,text=text)
+    
+    errormsg.pack()   
 def sendWebhook ():
-    
-    url = entry1.get()
-    content=entry2.get()
-    name=entry3.get()
-    avatar_url=entry4.get()
-    data = {
-    "content" : content,
-    "username" : name,
-    "avatar_url": avatar_url
-    }
-    
-    result = requests.post(url, json = data)
+    try:
+        url = entry1.get()
+        content=entry2.get()
+        name=entry3.get()
+        avatar_url=entry4.get()
+        data = {
+        "content" : content,
+        "username" : name,
+        "avatar_url": avatar_url
+        }
+
+        result = requests.post(url, json = data)
+        errormsgtext("Successfully sent webhook!")
+    except:
+        
+        errormsgtext("There was an error, make sure everything is complete and the information is correct.")
 
     
 button1 = tk.Button(text='Send Webhook', command=sendWebhook, bg='brown', fg='white', font=('helvetica', 9, 'bold'))
 canvas1.create_window(200, 180, window=button1)
+
+
+
+errormsg=tk.Label(root,text="Status messages will be sent below\n------------------------------------")
+errormsg.config(font=("Helvetica",10))
+canvas1.create_window(200,10,window=errormsg)
+
 
 label1.pack()
 label2.pack()
@@ -70,6 +84,8 @@ label4.pack()
 entry3.pack()
 label5.pack()
 entry4.pack()
-
 button1.pack()
+
+errormsg.pack()
+
 root.mainloop()
